@@ -6,23 +6,38 @@ package com.ubs.opsit.interviews;
 
 class BerlinClock implements TimeConverter {
 
-    private static String getTopHours(int hours) {
+    static String getTopHours(int hours) throws Exception {
+        if (hours < 0 || hours > 23) {
+            throw new Exception("invalid input");
+        }
         return getStatus(getTopNumberOfOnCounts(hours));
     }
 
-    private static String getBottomHours(int hours) {
+    static String getBottomHours(int hours) throws Exception {
+        if (hours < 0 || hours > 23) {
+            throw new Exception("invalid input");
+        }
         return getStatus(hours % 5);
     }
 
-    private static String getTopMinutes(int minutes) {
+    static String getTopMinutes(int minutes) throws Exception {
+        if (minutes < 0 || minutes > 59) {
+            throw new Exception("invalid input");
+        }
         return getStatus(11, getTopNumberOfOnCounts(minutes), "Y").replaceAll("YYY", "YYR");
     }
 
-    private static String getBottomMinutes(int minutes) {
+    static String getBottomMinutes(int minutes) throws Exception {
+        if (minutes < 0 || minutes > 59) {
+            throw new Exception("invalid input");
+        }
         return getStatus(4, minutes % 5, "Y");
     }
 
-    private static String getSeconds(int seconds) {
+    static String getSeconds(int seconds) throws Exception {
+        if (seconds < 0 || seconds > 59) {
+            throw new Exception("invalid input");
+        }
         if (seconds % 2 == 0) {
             return "Y";
         } else {
@@ -51,13 +66,16 @@ class BerlinClock implements TimeConverter {
 
     @Override
     public String convertTime(String aTime) {
-        String out =
-                getSeconds(Integer.parseInt(aTime.substring(6, 8))) + System.getProperty("line.separator") +
-                        getTopHours(Integer.parseInt(aTime.substring(0, 2))) + System.getProperty("line.separator") +
-                        getBottomHours(Integer.parseInt(aTime.substring(0, 2))) + System.getProperty("line.separator") +
-                        getTopMinutes(Integer.parseInt(aTime.substring(3, 5))) + System.getProperty("line.separator") +
-                        getBottomMinutes(Integer.parseInt(aTime.substring(3, 5)));
-        return out.intern();
+        String out;
+        try {
+            out = getSeconds(Integer.parseInt(aTime.substring(6, 8))) + System.getProperty("line.separator") +
+                    getTopHours(Integer.parseInt(aTime.substring(0, 2))) + System.getProperty("line.separator") +
+                    getBottomHours(Integer.parseInt(aTime.substring(0, 2))) + System.getProperty("line.separator") +
+                    getTopMinutes(Integer.parseInt(aTime.substring(3, 5))) + System.getProperty("line.separator") +
+                    getBottomMinutes(Integer.parseInt(aTime.substring(3, 5)));
+        } catch (Exception e) {
+            out = e.getMessage();
+        }
+        return out;
     }
-
 }
